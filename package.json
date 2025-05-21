@@ -1,0 +1,13 @@
+{
+  "name": "tomato-x",
+  "version": "1.0.1",
+  "description": "um super framework q ajuda a criar apis",
+  "main": "src/index.js",
+  "type": "module",
+  "author": "Nicolas Asafe",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "express": "^5.1.0"
+  }
+}
