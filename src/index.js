@@ -1,11 +1,10 @@
 import express, { Router } from 'express'
 import chalk from 'chalk'
 import fs from 'fs'
+import { pathToFileURL } from 'url'
 import path from 'path'
 
 let actions = 0
-let debugMode = true
-
 const timestamp = () => `[${new Date().toLocaleTimeString()}]`
 
 export class Server {
@@ -41,7 +40,7 @@ export class Server {
       })
     }
 
-    // Lista de rotas ativas (debug)
+    // Rotas debug
     this.#app.get('/__debug/routes', (_, res) => {
       const routes = []
       this.#app._router.stack.forEach(middleware => {
@@ -55,14 +54,14 @@ export class Server {
       res.json(routes)
     })
 
-    // Rota não encontrada
+    // 404 Handler
     this.#app.use((req, res) => {
       actions++
       console.log(chalk.red(`${actions} - Rota não encontrada: ${chalk.bgRed(req.method)} ${chalk.red(req.originalUrl)}`))
       res.status(404).send('Rota não existe.')
     })
 
-    // Iniciar servidor
+    // Start Server
     this.#serverInstance = this.#app.listen(PORT, () => {
       actions++
       console.log(chalk.yellow(`${actions} - Servidor rodando na porta ${PORT}`))
@@ -131,7 +130,7 @@ export class Group {
     console.log(chalk.cyan(`${actions} - Rota ${chalk.bgGreen(method.toUpperCase())} ${chalk.bgBlue(path)} do grupo ${chalk.bgMagenta(this.#name)} criada com sucesso`))
   }
 
-  autoLoadRoutesFrom(folderPath) {
+  async autoLoadRoutesFrom(folderPath) {
     const fullPath = path.resolve(folderPath)
     if (!fs.existsSync(fullPath)) {
       console.warn(chalk.red(`Pasta de rotas ${folderPath} não encontrada`))
@@ -139,13 +138,13 @@ export class Group {
     }
 
     const files = fs.readdirSync(fullPath)
-    files.forEach(file => {
-      const route = require(path.join(fullPath, file))
+    for (const file of files) {
+      const route = await import(pathToFileURL(path.join(fullPath, file)).href)
       if (route && typeof route.register === 'function') {
         route.register(this)
         actions++
         console.log(chalk.magenta(`${actions} - Rota autoload de ${file} registrada`))
       }
-    })
+    }
   }
 }
