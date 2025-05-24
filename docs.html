@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tomato docs</title>
+    <style>
+        body {
+            background-color: rgb(235, 228, 228);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        h1 {
+            color: #6d3131;
+        }
+
+        main {
+            padding: 10px;
+
+            p {
+                font-weight: 600;
+                color: #220404;
+            }
+
+            .code {
+                background-color: rgba(212, 211, 211, 0.719);
+                font-size: 12px;
+                font-family: monospace;
+                border: 2px solid white;
+                border-radius: 10px;
+                box-shadow: 1px 2px 2px rgba(2, 2, 2, 0.199);
+                span{
+                    color: rgb(109, 112, 114);
+                }
+                p {
+                    margin: 10px;
+                }
+
+                header {
+                    padding: 10px;
+                    border-bottom: 2px solid white;
+                    font-weight: 700;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+            }
+        }
+
+        header {
+            padding: 0px 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #6d31313f;
+
+            span {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Tomato x</h1>
+        <span>
+            🍅
+        </span>
+    </header>
+    <main>
+        <p>Tomato x é um framework que ajuda na criação de APIs, ele tem funcionalidades simples e diferentes. Você
+            aprender tudo nessa documentação! Vamos lá.</p>
+        <h1>Criando as primeiras rotas</h1>
+        <p>Para criar uma rota você primeiro <strong>precisa</strong> criar um grupo que nada mais é um conjunto de
+            rotas. Para criar um grupo basta seguir este exemplo:</p>
+        <div class="code">
+            <header>Main.js</header>
+            <p>
+                import tomato from 'tomato'<br><br>
+                const api = new tomato.Group("api") <span>// no parametro construtor fica o nome do grupo</span>
+            </p>
+        </div>
+        <p>Depois disso você pode adicionar esse grupo á sua api, para criar a api basta seguir este exemplo:</p>
+        <div class="code">
+            <header>Main.js</header>
+            <p>
+                import tomato from 'tomato'<br><br>
+                const api = new tomato.Group("api") 
+                <br>new tomato.Server({
+                    PORT:3000, groups:[api] <span>// nessa lista de groups fica todos os seus grupos com rotas que a api pode usar</span>
+                })
+            </p>
+        </div>
+        <p>Agora vamos criar nossa rota, para criar uma rota, você precisa utilizar o método newRoute da classe Group: </p>
+        <div class="code">
+            <header>Main.js</header>
+            <p>
+                import tomato from 'tomato'<br><br>
+                const api = new tomato.Group("api") <br>
+                <br>
+                <span>//Você só insere o caminho , metodo e a resposta da rota que pode ser tanto um json tanto um txt</span>
+                <br>api.newRoute({
+                    method:"GET",
+                    path:"/",
+                    responseTXT:"Olá, mundo!"
+                }) 
+                <br>
+                <br>new tomato.Server({
+                    PORT:3000, groups:[api]
+                })
+            </p>
+        </div>
+    </main>
+</body>
+
+</html>

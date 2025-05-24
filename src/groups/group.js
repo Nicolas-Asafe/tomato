@@ -3,10 +3,10 @@ import { pathToFileURL } from 'url'
 import path from 'path'
 import { Router } from 'express'
 import chalk from 'chalk'
+import { timestamp } from '../server/server.js'
 
 
-
-export class Group {
+export class Grupo {
   #name
   #router
 
@@ -19,7 +19,7 @@ export class Group {
     return this.#name
   }
 
-  get router() {
+  get rotas() {
     return this.#router
   }
 

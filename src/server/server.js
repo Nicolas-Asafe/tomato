@@ -3,7 +3,7 @@ import chalk from 'chalk'
 
 
 const timestamp = () => `[${new Date().toLocaleTimeString()}]`
-
+export {timestamp}
 
 export class Server {
   #app

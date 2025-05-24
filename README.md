@@ -1,7 +1,7 @@
 
 <body style="font-family: Arial, sans-serif; background: #111; color: #eee; padding: 2rem; line-height: 1.6;">
   <h1 style="color:rgb(226, 171, 164);">Notas da Atualização - tomato - x </h1>
-  <p><strong>Versão:</strong> 1.1.2</p>
+  <p><strong>Versão:</strong> 1.1.5</p>
   <p><strong>Data:</strong> 23 de Maio de 2025</p>
 
   <h2 style="color: #ffd700;">Novidades</h2>
@@ -12,7 +12,8 @@
     <li> <strong>Logger com timestamp:</strong> hora precisa nos logs do terminal pra rastrear com estilo.</li>
     <li> <strong>Debug de rotas ativas:</strong> acesse <code>/__debug/routes</code> e veja todas as rotas vivas.</li>
     <li><strong>Função de shutdown:</strong> derrube o servidor de forma elegante com <code>server.shutdown()</code>.</li>
-    <li><strong>Autoload de rotas:</strong> carregamento automático de arquivos de rota com <code>group.autoLoadRoutesFrom()</code>.</li>
+    <li><strong>Autoload de rotas:</strong> carregamento automático de arquivos de rota com <code>group.autoLoadRoutesFrom(nomeDoDiretório)</code>.</li>
+    <li><strong>BuildResponse:</strong>crie objetos de resposta json padronizados para sua api <code>tomato.buildResponse(res,{message:"OK",status:202,data(opcional):{dt:"23/05"} })</code></li>
     <li><strong>Modo Debug pronto pra produção:</strong> mais controle e logs detalhados pro dev raiz.</li>
   </ul>
 
