@@ -5,8 +5,7 @@ import { Router } from 'express'
 import chalk from 'chalk'
 import { timestamp } from '../server/server.js'
 
-
-export class Grupo {
+export class Group {
   #name
   #router
 
@@ -19,7 +18,7 @@ export class Grupo {
     return this.#name
   }
 
-  get rotas() {
+  get routes() {
     return this.#router
   }
 
@@ -38,7 +37,7 @@ export class Grupo {
   }) {
     const methodLower = method.toLowerCase()
     if (!['get', 'post', 'put', 'delete', 'patch'].includes(methodLower)) {
-      throw new Error(`Método ${method} não suportado`)
+      throw new Error(`Method ${method} is not supported`)
     }
 
     this.#router[methodLower](path, ...middlewares, async (req, res) => {
@@ -52,18 +51,18 @@ export class Grupo {
           }
         }
       } catch (err) {
-        console.error(chalk.red(`${timestamp()} - Erro na rota ${method.toUpperCase()} ${path}:`), err)
-        if (!res.headersSent) res.status(500).send('- Erro interno -')
+        console.error(chalk.red(`${timestamp()} - Error in route ${method.toUpperCase()} ${path}:`), err)
+        if (!res.headersSent) res.status(500).send('Internal Server Error')
       }
     })
 
-    console.log(chalk.cyan(`- Rota ${chalk.bgGreen(method.toUpperCase())} ${chalk.bgBlue(path)} do grupo ${chalk.bgMagenta(this.#name)} criada com sucesso`))
+    console.log(chalk.cyan(`- Route ${chalk.bgGreen(method.toUpperCase())} ${chalk.bgBlue(path)} in group ${chalk.bgMagenta(this.#name)} created successfully`))
   }
 
   async autoLoadRoutesFrom(folderPath) {
     const fullPath = path.resolve(folderPath)
     if (!fs.existsSync(fullPath)) {
-      console.warn(chalk.red(`Pasta de rotas ${folderPath} não encontrada`))
+      console.warn(chalk.red(`Routes folder ${folderPath} not found`))
       return
     }
 
@@ -72,7 +71,7 @@ export class Grupo {
       const route = await import(pathToFileURL(path.join(fullPath, file)).href)
       if (route && typeof route.register === 'function') {
         route.register(this)
-        console.log(chalk.magenta(`- Rota autoload de ${file} registrada`))
+        console.log(chalk.magenta(`- Auto-loaded route from ${file} successfully registered`))
       }
     }
   }

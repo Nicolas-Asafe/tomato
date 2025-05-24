@@ -1,9 +1,8 @@
-import express, { Router } from 'express'
+import express from 'express'
 import chalk from 'chalk'
 
-
 const timestamp = () => `[${new Date().toLocaleTimeString()}]`
-export {timestamp}
+export { timestamp }
 
 export class Server {
   #app
@@ -13,30 +12,30 @@ export class Server {
     this.#app = express()
     this.#app.use(express.json())
 
-    // Middleware global
+    // Global Middleware
     this.#app.use((req, res, next) => {
       const start = Date.now()
       res.on('finish', () => {
         const duration = Date.now() - start
-        console.log(`${timestamp()}- ${chalk.bgGreen(req.method)} ${chalk.bgYellow(req.url)} (${chalk.bgBlue(duration + "ms")})`)
+        console.log(`${timestamp()} - ${chalk.bgGreen(req.method)} ${chalk.bgYellow(req.url)} (${chalk.bgBlue(duration + "ms")})`)
       })
       next()
     })
 
-    // Grupos de rotas
+    // Route Groups
     groups.forEach(group => {
-      this.#app.use(`/${group.name}`, group.router)
-      console.log(chalk.green(`- Grupo ${chalk.bgGreenBright("/" + group.name)} conectado com sucesso`))
+      this.#app.use(`/${group.name}`, group.routes)
+      console.log(chalk.green(`- Route group ${chalk.bgGreenBright("/" + group.name)} successfully connected`))
     })
 
-    // Health check
+    // Health Check
     if (enableHealthCheck) {
       this.#app.get('/health', (_, res) => {
         res.status(200).json({ status: 'ok', uptime: process.uptime().toFixed(2) + 's' })
       })
     }
 
-    // Rotas debug
+    // Debug Routes
     this.#app.get('/__debug/routes', (_, res) => {
       const routes = []
       this.#app._router.stack.forEach(middleware => {
@@ -52,19 +51,19 @@ export class Server {
 
     // 404 Handler
     this.#app.use((req, res) => {
-      console.log(chalk.red(`- Rota não encontrada: ${chalk.bgRed(req.method)} ${chalk.red(req.originalUrl)}`))
-      res.status(404).send('Rota não existe.')
+      console.log(chalk.red(`- Route not found: ${chalk.bgRed(req.method)} ${chalk.red(req.originalUrl)}`))
+      res.status(404).send('Route does not exist.')
     })
 
     // Start Server
     this.#serverInstance = this.#app.listen(PORT, () => {
-      console.log(chalk.yellow(`- Servidor rodando na porta ${PORT}`))
+      console.log(chalk.yellow(`- Server running on port ${PORT}`))
     })
   }
 
   shutdown() {
     this.#serverInstance.close(() => {
-      console.log(chalk.red(`Servidor desligado.`))
+      console.log(chalk.red(`Server has been shut down.`))
     })
   }
 }
