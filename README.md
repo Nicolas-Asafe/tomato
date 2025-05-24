@@ -14,11 +14,13 @@
     <li><strong>Função de shutdown:</strong> derrube o servidor de forma elegante com <code>server.shutdown()</code>.</li>
     <li><strong>Autoload de rotas:</strong> carregamento automático de arquivos de rota com <code>group.autoLoadRoutesFrom(nomeDoDiretório)</code>.</li>
     <li><strong>BuildResponse:</strong>crie objetos de resposta json padronizados para sua api <code>tomato.buildResponse(res,{message:"OK",status:202,data(opcional):{dt:"23/05"} })</code></li>
-    <li><strong>syvars: crie variaveis que podem ser acessadas qualquer arquivo</strong><code>
-      const nome = (name="nome") => syvar.access(name)
-      syvar.set("nome","Nicolas");
-      console.log(nome())
-    </code></li>
+    <li><strong>syvars: crie variaveis que podem ser acessadas qualquer arquivo</strong>
+      <code>
+  const [get,set] = NewSyVAR("nome","Nicolas")
+  set("Nicolas");
+  console.log(get())
+      </code>
+    </li>
     <li><strong>Modo Debug pronto pra produção:</strong> mais controle e logs detalhados pro dev raiz.</li>
   </ul>
 
