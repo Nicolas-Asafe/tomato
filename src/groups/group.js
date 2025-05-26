@@ -9,7 +9,8 @@ export class Group {
   #name
   #router
 
-  constructor(name = 'api/v1') {
+  constructor(name = '') {
+    // Corrige o nome para sempre começar com uma barra
     this.#name = name
     this.#router = Router()
   }
@@ -26,6 +27,14 @@ export class Group {
     this.#router.use(middleware)
   }
 
+  addGroup(group) {
+    const fullPath = group.name
+    this.#router.use(fullPath, group.routes)
+    console.log(
+      chalk.yellow(`- Group ${chalk.bgMagenta(group.name)} added to group ${chalk.bgMagenta(this.#name)}`)
+    )
+  }
+
   newRoute({
     method = 'GET',
     path = '/',
@@ -34,7 +43,7 @@ export class Group {
     responseTXT = null,
     middlewares = [],
     caseError,
-    process = async (params, req, res) => { }
+    process = async (params, req, res) => {}
   }) {
     const methodLower = method.toLowerCase()
     if (!['get', 'post', 'put', 'delete', 'patch'].includes(methodLower)) {
@@ -51,45 +60,68 @@ export class Group {
           method: req.method,
           url: req.url,
           request: req
-        };
+        }
 
-
-        await process(reqCustom, res);
+        await process(reqCustom, res)
 
         if (!res.headersSent) {
           if (responseJSON !== null && responseJSON !== undefined) {
-            res.status(status).json(responseJSON);
+            res.status(status).json(responseJSON)
           } else {
-            res.status(status).send(responseTXT ?? 'OK');
+            res.status(status).send(responseTXT ?? 'OK')
           }
         }
       } catch (err) {
         if (!caseError) {
-          console.error(chalk.red(`${timestamp()} - Error in route ${method.toUpperCase()} ${path}:`), err);
-          if (!res.headersSent) res.status(500).send('Internal Server Error');
+          console.error(chalk.red(`${timestamp()} - Error in route ${method.toUpperCase()} ${path}:`), err)
+          if (!res.headersSent) res.status(500).send('Internal Server Error')
         } else {
-          caseError(err, req, res);
+          caseError(err, req, res)
         }
       }
-    });
+    })
 
-    console.log(chalk.cyan(`- Route ${chalk.bgGreen(method.toUpperCase())} ${chalk.bgBlue(path)} in group ${chalk.bgMagenta(this.#name)} created successfully`))
+    console.log(
+      chalk.cyan(
+        `- Route ${chalk.bgGreen(method.toUpperCase())} ${chalk.bgBlue(path)} in group ${chalk.bgMagenta(
+          this.#name
+        )} created successfully`
+      )
+    )
   }
 
   async autoLoadRoutesFrom(folderPath) {
-    const fullPath = path.resolve(folderPath)
-    if (!fs.existsSync(fullPath)) {
-      console.warn(chalk.red(`Routes folder ${folderPath} not found`))
-      return
-    }
+  const fullPath = path.resolve(folderPath)
+  if (!fs.existsSync(fullPath)) {
+    console.warn(chalk.red(`Routes folder ${folderPath} not found`))
+    return
+  }
 
-    const files = fs.readdirSync(fullPath)
-    for (const file of files) {
-      const route = await import(pathToFileURL(path.join(fullPath, file)).href)
-      if (route && typeof route.register === 'function') {
-        route.register(this)
-        console.log(chalk.magenta(`- Auto-loaded route from ${file} successfully registered`))
+  const entries = fs.readdirSync(fullPath, { withFileTypes: true })
+
+  for (const entry of entries) {
+    const entryPath = path.join(fullPath, entry.name)
+
+    if (entry.isDirectory()) {
+      if (entry.name.startsWith('_')) continue
+      const subgroupName = '/' + entry.name
+      const subgroup = new Group(subgroupName)
+
+      await subgroup.autoLoadRoutesFrom(entryPath)
+      this.addGroup(subgroup)
+    } else if (entry.isFile()) {
+      if (entry.name.endsWith('.js')) {
+        const routeModule = await import(pathToFileURL(entryPath).href)
+        if (routeModule && typeof routeModule.register === 'function') {
+          routeModule.register(this)
+          console.log(
+            chalk.magenta(`- Auto-loaded route from ${entry.name} successfully registered in group ${this.#name}`)
+          )
+        }
       }
     }
   }
+}
+
+
 }

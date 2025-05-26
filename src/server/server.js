@@ -37,17 +37,31 @@ export class Server {
 
     // Debug Routes
     this.#app.get('/__debug/routes', (_, res) => {
-      const routes = []
-      this.#app._router.stack.forEach(middleware => {
-        if (middleware.route) {
+  const routes = []
+
+  if (!this.#app._router) return res.json(routes)
+
+  this.#app._router.stack.forEach(middleware => {
+    if (middleware.route) {
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods).map(m => m.toUpperCase())
+      })
+    } else if (middleware.name === 'router' && middleware.handle.stack) {
+      middleware.handle.stack.forEach(handler => {
+        if (handler.route) {
           routes.push({
-            path: middleware.route.path,
-            methods: middleware.route.methods
+            path: handler.route.path,
+            methods: Object.keys(handler.route.methods).map(m => m.toUpperCase())
           })
         }
       })
-      res.json(routes)
-    })
+    }
+  })
+
+  res.json(routes)
+})
+
 
     // 404 Handler
     this.#app.use((req, res) => {

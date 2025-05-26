@@ -17,4 +17,5 @@ const tomato = {
   Group,Server,NewRegister,buildReponse,NewSyvarLocal,syvars
 }
 
+export {Group,Server,NewRegister,buildReponse,NewSyvarLocal,syvars}
 export default tomato
