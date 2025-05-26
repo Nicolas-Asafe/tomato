@@ -54,7 +54,7 @@ export class Group {
         };
 
 
-        await process(reqCustom, resCustom);
+        await process(reqCustom, res);
 
         if (!res.headersSent) {
           if (responseJSON !== null && responseJSON !== undefined) {

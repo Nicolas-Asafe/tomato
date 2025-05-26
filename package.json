@@ -1,6 +1,6 @@
 {
   "name": "tomato-x",
-  "version": "1.2.6",
+  "version": "1.2.6.1",
   "description": "um super framework q ajuda a criar apis",
   "main": "src/index.js",
   "type": "module",
