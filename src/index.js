@@ -4,10 +4,15 @@ import NewRegister from "./newRegister.js";
 import buildReponse from "./buildResponse.js";
 import { listVars,access,setVar } from "./system/syvars.js";
 
-const syvars = {listVars,access,setVar}
-
+const NewSyVAR = (name = "value",value="none") => {
+    tomato.syvars.setVar(name,value)
+    return [
+        ()=>tomato.syvars.access(name),
+        (value)=>{tomato.syvars.setVar(name,value)}
+    ]
+}
 const tomato = {
-  Group,Server,NewRegister,buildReponse,syvars
+  Group,Server,NewRegister,buildReponse,NewSyVAR
 }
 
 export default tomato

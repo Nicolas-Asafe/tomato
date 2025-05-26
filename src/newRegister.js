@@ -5,6 +5,7 @@ export default function NewRegister(params={
     responseJSON : null,
     responseTXT : null,
     middlewares : [],
+    caseError,
     process : async (params, req, res) => { }}){
     const register = (group) => {
         group.newRoute(params)

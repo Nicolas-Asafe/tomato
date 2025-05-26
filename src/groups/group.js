@@ -33,7 +33,8 @@ export class Group {
     responseJSON = null,
     responseTXT = null,
     middlewares = [],
-    process = async (params, req, res) => {}
+    caseError,
+    process = async (params, req, res) => { }
   }) {
     const methodLower = method.toLowerCase()
     if (!['get', 'post', 'put', 'delete', 'patch'].includes(methodLower)) {
@@ -42,19 +43,45 @@ export class Group {
 
     this.#router[methodLower](path, ...middlewares, async (req, res) => {
       try {
-        await process(req.params, req, res)
+        const reqCustom = {
+          body: req.body,
+          params: req.params,
+          query: req.query,
+          headers: req.headers,
+          method: req.method,
+          url: req.url,
+          origoinal: req
+        };
+
+        const resCustom = {
+          send: (data, status = 200) => {
+            if (!res.headersSent) res.status(status).send(data);
+          },
+          json: (data, status = 200) => {
+            if (!res.headersSent) res.status(status).json(data);
+          },
+          status: (code) => res.status(code),
+          raw: res
+        };
+
+        const { responseJSON, responseTXT, status = 200 } = await process(reqCustom, resCustom);
+
         if (!res.headersSent) {
-          if (responseJSON !== null) {
-            res.status(status).json(responseJSON)
+          if (responseJSON !== null && responseJSON !== undefined) {
+            res.status(status).json(responseJSON);
           } else {
-            res.status(status).send(responseTXT ?? 'OK')
+            res.status(status).send(responseTXT ?? 'OK');
           }
         }
       } catch (err) {
-        console.error(chalk.red(`${timestamp()} - Error in route ${method.toUpperCase()} ${path}:`), err)
-        if (!res.headersSent) res.status(500).send('Internal Server Error')
+        if (!caseError) {
+          console.error(chalk.red(`${timestamp()} - Error in route ${method.toUpperCase()} ${path}:`), err);
+          if (!res.headersSent) res.status(500).send('Internal Server Error');
+        } else {
+          caseError(err, req, res);
+        }
       }
-    })
+    });
 
     console.log(chalk.cyan(`- Route ${chalk.bgGreen(method.toUpperCase())} ${chalk.bgBlue(path)} in group ${chalk.bgMagenta(this.#name)} created successfully`))
   }

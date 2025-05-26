@@ -28,7 +28,7 @@ function saveToFile() {
 // Acessar variável (throw se não existir)
 export function access(key) {
   if (!(key in systemVariables)) {
-    throw new Error(`⚠️ Variable "${key}" not found`)
+    throw new Error(`Variable "${key}" not found`)
   }
   return systemVariables[key]
 }
