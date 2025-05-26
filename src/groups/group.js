@@ -50,21 +50,11 @@ export class Group {
           headers: req.headers,
           method: req.method,
           url: req.url,
-          origoinal: req
+          request: req
         };
 
-        const resCustom = {
-          send: (data, status = 200) => {
-            if (!res.headersSent) res.status(status).send(data);
-          },
-          json: (data, status = 200) => {
-            if (!res.headersSent) res.status(status).json(data);
-          },
-          status: (code) => res.status(code),
-          raw: res
-        };
 
-        const { responseJSON, responseTXT, status = 200 } = await process(reqCustom, resCustom);
+        await process(reqCustom, resCustom);
 
         if (!res.headersSent) {
           if (responseJSON !== null && responseJSON !== undefined) {

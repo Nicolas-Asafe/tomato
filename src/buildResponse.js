@@ -1,10 +1,14 @@
-export default function buildReponse(res, params = {
-    message: "OK",
-    status: 200,
-    data: {}
-}) {
-    params.data ?
-        res.status(params.status ?? 200).json({ message: params.message,data:params.data })
-        : res.status(params.status ?? 200).json({ message: params.message })
-    return params
+export default function buildResponse(res, {
+  message = "OK",
+  status = 200,
+  data = null
+} = {}) {
+  if (!res.headersSent) {
+    if (data !== null && data !== undefined) {
+      res.status(status).json({ message, data });
+    } else {
+      res.status(status).json({ message });
+    }
+  }
+  return { message, status, data };
 }
