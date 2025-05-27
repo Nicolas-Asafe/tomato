@@ -1,3 +1,9 @@
 {
-  "nome": "Nicole"
+  "s": {
+    "router": "nd"
+  },
+  "index": {
+    "return": true,
+    "path": "/"
+  }
 }

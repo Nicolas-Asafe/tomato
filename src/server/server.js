@@ -8,7 +8,7 @@ export class Server {
   #app
   #serverInstance
 
-  constructor({ PORT = 3000, groups = [], enableHealthCheck = true }) {
+  constructor({ PORT = 3000, groups = [], enableHealthCheck = true,saveRoutes }) {
     this.#app = express()
     this.#app.use(express.json())
 
@@ -37,30 +37,30 @@ export class Server {
 
     // Debug Routes
     this.#app.get('/__debug/routes', (_, res) => {
-  const routes = []
+      const routes = []
 
-  if (!this.#app._router) return res.json(routes)
+      if (!this.#app._router) return res.json(routes)
 
-  this.#app._router.stack.forEach(middleware => {
-    if (middleware.route) {
-      routes.push({
-        path: middleware.route.path,
-        methods: Object.keys(middleware.route.methods).map(m => m.toUpperCase())
-      })
-    } else if (middleware.name === 'router' && middleware.handle.stack) {
-      middleware.handle.stack.forEach(handler => {
-        if (handler.route) {
+      this.#app._router.stack.forEach(middleware => {
+        if (middleware.route) {
           routes.push({
-            path: handler.route.path,
-            methods: Object.keys(handler.route.methods).map(m => m.toUpperCase())
+            path: middleware.route.path,
+            methods: Object.keys(middleware.route.methods).map(m => m.toUpperCase())
+          })
+        } else if (middleware.name === 'router' && middleware.handle.stack) {
+          middleware.handle.stack.forEach(handler => {
+            if (handler.route) {
+              routes.push({
+                path: handler.route.path,
+                methods: Object.keys(handler.route.methods).map(m => m.toUpperCase())
+              })
+            }
           })
         }
       })
-    }
-  })
 
-  res.json(routes)
-})
+      res.json(routes)
+    })
 
 
     // 404 Handler

@@ -10,7 +10,6 @@ export class Group {
   #router
 
   constructor(name = '') {
-    // Corrige o nome para sempre começar com uma barra
     this.#name = name
     this.#router = Router()
   }
@@ -43,7 +42,7 @@ export class Group {
     responseTXT = null,
     middlewares = [],
     caseError,
-    process = async (params, req, res) => {}
+    process = async (req, res) => { }
   }) {
     const methodLower = method.toLowerCase()
     if (!['get', 'post', 'put', 'delete', 'patch'].includes(methodLower)) {
@@ -62,7 +61,19 @@ export class Group {
           request: req
         }
 
-        await process(reqCustom, res)
+        const endProcess = await process(reqCustom, res)
+
+        switch (endProcess) {
+          case 0:
+            console.log(chalk.gray(`Ended manually: ${method.toUpperCase()} ${path}`))
+            break
+          case 1:
+            console.log(chalk.gray(`Ended manually: ${method.toUpperCase()} ${path}`))
+            res.status(200).send('👍')
+            break
+        }
+
+
 
         if (!res.headersSent) {
           if (responseJSON !== null && responseJSON !== undefined) {
@@ -91,37 +102,37 @@ export class Group {
   }
 
   async autoLoadRoutesFrom(folderPath) {
-  const fullPath = path.resolve(folderPath)
-  if (!fs.existsSync(fullPath)) {
-    console.warn(chalk.red(`Routes folder ${folderPath} not found`))
-    return
-  }
+    const fullPath = path.resolve(folderPath)
+    if (!fs.existsSync(fullPath)) {
+      console.warn(chalk.red(`Routes folder ${folderPath} not found`))
+      return
+    }
 
-  const entries = fs.readdirSync(fullPath, { withFileTypes: true })
+    const entries = fs.readdirSync(fullPath, { withFileTypes: true })
 
-  for (const entry of entries) {
-    const entryPath = path.join(fullPath, entry.name)
+    for (const entry of entries) {
+      const entryPath = path.join(fullPath, entry.name)
 
-    if (entry.isDirectory()) {
-      if (entry.name.startsWith('_')) continue
-      const subgroupName = '/' + entry.name
-      const subgroup = new Group(subgroupName)
+      if (entry.isDirectory()) {
+        if (entry.name.startsWith('_')) continue
+        const subgroupName = '/' + entry.name
+        const subgroup = new Group(subgroupName)
 
-      await subgroup.autoLoadRoutesFrom(entryPath)
-      this.addGroup(subgroup)
-    } else if (entry.isFile()) {
-      if (entry.name.endsWith('.js')) {
-        const routeModule = await import(pathToFileURL(entryPath).href)
-        if (routeModule && typeof routeModule.register === 'function') {
-          routeModule.register(this)
-          console.log(
-            chalk.magenta(`- Auto-loaded route from ${entry.name} successfully registered in group ${this.#name}`)
-          )
+        await subgroup.autoLoadRoutesFrom(entryPath)
+        this.addGroup(subgroup)
+      } else if (entry.isFile()) {
+        if (entry.name.endsWith('.js')) {
+          const routeModule = await import(pathToFileURL(entryPath).href)
+          if (routeModule && typeof routeModule.register === 'function') {
+            routeModule.register(this)
+            console.log(
+              chalk.magenta(`- Auto-loaded route from ${entry.name} successfully registered in group ${this.#name}`)
+            )
+          }
         }
       }
     }
   }
-}
 
 
 }

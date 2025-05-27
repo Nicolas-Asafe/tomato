@@ -1,5 +1,5 @@
 import tomato from '../src/index.js'
-const api = new tomato.Group("users")
+const api = new tomato.Group()
 
 api.autoLoadRoutesFrom("./routers")
 

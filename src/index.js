@@ -1,7 +1,7 @@
 import { Group } from "./groups/group.js";
 import { Server } from "./server/server.js";
-import NewRegister from "./newRegister.js";
-import buildReponse from "./buildResponse.js";
+import NewRegister from "./utils/newRegister.js";
+import buildReponse from "./utils/buildResponse.js";
 import { listVars,access,setVar } from "./system/syvars.js";
 
 const NewSyvarLocal = (name = "value",value="none") => {
