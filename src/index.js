@@ -1,7 +1,7 @@
 import { Group } from "./groups/group.js";
 import { Server } from "./server/server.js";
 import NewRegister from "./utils/newRegister.js";
-import buildReponse from "./utils/buildResponse.js";
+import buildResponse from "./utils/buildResponse.js";
 import { listVars,access,setVar } from "./system/syvars.js";
 
 const NewSyvarLocal = (name = "value",value="none") => {
@@ -14,8 +14,8 @@ const NewSyvarLocal = (name = "value",value="none") => {
 const syvars = {access,setVar,listVars}
 
 const tomato = {
-  Group,Server,NewRegister,buildReponse,NewSyvarLocal,syvars
+  Group,Server,NewRegister,buildResponse,NewSyvarLocal,syvars
 }
 
-export {Group,Server,NewRegister,buildReponse,NewSyvarLocal,syvars}
+export {Group,Server,NewRegister,buildResponse,NewSyvarLocal,syvars}
 export default tomato

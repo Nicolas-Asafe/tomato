@@ -8,7 +8,7 @@ export class Server {
   #app
   #serverInstance
 
-  constructor({ PORT = 3000, groups = [], enableHealthCheck = true,saveRoutes }) {
+  constructor({ PORT = 3000, groups = [], enableHealthCheck = true, }) {
     this.#app = express()
     this.#app.use(express.json())
 

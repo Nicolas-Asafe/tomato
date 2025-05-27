@@ -1,10 +1,13 @@
 {
   "name": "tomato-x",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "description": "um super framework q ajuda a criar apis",
   "main": "src/index.js",
   "type": "module",
   "author": "Nicolas Asafe",
+  "scripts": {
+    "postinstall": "node src/structure/structInit.js"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.4.1",
