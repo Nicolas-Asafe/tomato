@@ -1,7 +1,7 @@
 
 <body style="font-family: Arial, sans-serif; background: #111; color: #eee; padding: 2rem; line-height: 1.6;">
   <h1 style="color:rgb(226, 171, 164);">Notas da Atualização - tomato - x </h1>
-  <p><strong>Versão:</strong> 1.1.7</p>
+  <p><strong>Versão:</strong> 1.3.0</p>
   <p><strong>Data:</strong> 23 de Maio de 2025</p>
 
   <h2 style="color: #ffd700;">Novidades</h2>
