@@ -1,6 +1,6 @@
 
 <body style="font-family: Arial, sans-serif; background: #111; color: #eee; padding: 2rem; line-height: 1.6;">
-  <h1 style="color:rgb(226, 171, 164);">Notas da Atualização - tomato - x </h1>
+  <h1 style="color:rgb(226, 171, 164);">Notas da Atualização - tomato  </h1>
   <p><strong>Versão:</strong> 1.3.0</p>
   <p><strong>Data:</strong> 23 de Maio de 2025</p>
 
@@ -37,6 +37,6 @@
     <li>Monitoramento em tempo real com WebSocket</li>
   </ul>
 
-  <p style="margin-top: 3rem;">Feito com  por <strong>Nicolas Penha</strong></p>
+  <p style="margin-top: 3rem;">Feito por <strong>Nicolas Penha</strong></p>
 </body>
 </html>
